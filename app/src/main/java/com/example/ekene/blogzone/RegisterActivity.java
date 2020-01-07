@@ -19,6 +19,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class RegisterActivity extends AppCompatActivity {
     private Button registerBtn;
     private EditText emailField, usernameField, passwordField;
@@ -47,6 +51,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(RegisterActivity.this, "LOADING...", Toast.LENGTH_LONG).show();
+
+
                 final String username = usernameField.getText().toString().trim();
                 final String email = emailField.getText().toString().trim();
                 final String password = passwordField.getText().toString().trim();
@@ -58,6 +64,10 @@ public class RegisterActivity extends AppCompatActivity {
                             DatabaseReference current_user_db = mDatabase.child(user_id);
                             current_user_db.child("Username").setValue(username);
                             current_user_db.child("Image").setValue("Default");
+                            DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                            Date dateobj = new Date();
+                            current_user_db.child("date").setValue(df.format(dateobj));
+                            current_user_db.child("EVENT").setValue(0);
                             Toast.makeText(RegisterActivity.this, "Registeration Succesful", Toast.LENGTH_SHORT).show();
                             Intent regIntent = new Intent(RegisterActivity.this, ProfileActivity.class);
                             regIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

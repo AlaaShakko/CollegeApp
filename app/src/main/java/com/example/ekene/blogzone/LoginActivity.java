@@ -1,6 +1,7 @@
 package com.example.ekene.blogzone;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText loginEmail, loginPass;
+    private TextView signup;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private Button loginBtn;
@@ -34,10 +37,17 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn = (Button)findViewById(R.id.loginBtn);
         loginEmail = (EditText)findViewById(R.id.login_email);
         loginPass = (EditText)findViewById(R.id.login_password);
+        signup = (TextView) findViewById(R.id.signUpTxtView);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,7 +83,21 @@ public class LoginActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.hasChild(user_id)){
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.layoutFragment, new WelcomeFragment())
+                            .commit();
+                    Handler handler = new Handler();
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            //Second fragment after 5 seconds appears
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                        }
+                    };
+
+                    handler.postDelayed(runnable, 3000);
+
                 }else {
                     Toast.makeText(LoginActivity.this, "User not registered!", Toast.LENGTH_SHORT).show();
                 }

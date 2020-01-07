@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.d("thread", "startThread: " + i);
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -117,15 +117,28 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(singleActivity);
                     }
                 });
+
+                viewHolder.commentbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent commentIntent = new Intent(MainActivity.this, CommentActivity.class);
+                        commentIntent.putExtra("PostID", post_key);
+                        startActivity(commentIntent);
+                    }
+                });
             }
         };
         recyclerView.setAdapter(FBRA);
     }
     public static class BlogzoneViewHolder extends RecyclerView.ViewHolder{
         View mView;
+        Button commentbtn;
         public BlogzoneViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+
+            commentbtn = (Button) mView.findViewById(R.id.comment_button);
         }
         public void setTitle(String title){
             TextView post_title = mView.findViewById(R.id.post_title_txtview);

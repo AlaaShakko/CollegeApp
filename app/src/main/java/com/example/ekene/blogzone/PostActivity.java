@@ -45,12 +45,14 @@ public class PostActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseUsers;
     private FirebaseUser mCurrentUser;
+    private int value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         // initializing objects
+        database = FirebaseDatabase.getInstance();
         postBtn = (Button)findViewById(R.id.postBtn);
         textDesc = (EditText)findViewById(R.id.textDesc);
         textTitle = (EditText)findViewById(R.id.textTitle);
@@ -61,6 +63,8 @@ public class PostActivity extends AppCompatActivity {
         mDatabaseUsers = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
         imageBtn = (ImageButton)findViewById(R.id.imageBtn);
         //picking image from gallery
+
+
         imageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +73,7 @@ public class PostActivity extends AppCompatActivity {
                 startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
             }
         });
+
         // posting to Firebase
         postBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,12 +101,14 @@ public class PostActivity extends AppCompatActivity {
                                     newPost.child("desc").setValue(PostDesc);
                                     newPost.child("imageUrl").setValue(downloadUrl.toString());
                                     newPost.child("uid").setValue(mCurrentUser.getUid());
+                                 //   value = (int) dataSnapshot.child("Event").getValue();
                                     newPost.child("username").setValue(dataSnapshot.child("name").getValue())
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
 
                                                     if (task.isSuccessful()){
+
                                                         Intent intent = new Intent(PostActivity.this, MainActivity.class);
                                                         startActivity(intent);
                                                     }
